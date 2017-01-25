@@ -37,6 +37,7 @@
  *         Adam Dunkels <adam@sics.se>
  */
 
+#include <ets_sys.h>
 #include "sys/autostart.h"
 
 #if DEBUG
@@ -47,25 +48,25 @@
 #endif
 
 /*---------------------------------------------------------------------------*/
-void autostart_start(struct process * const processes[])
+void ICACHE_FLASH_ATTR autostart_start(struct process * const processes[])
 {
-  int i;
+	int i;
 
-  for(i = 0; processes[i] != NULL; ++i)
-  {
-    process_start(processes[i], NULL);
-    PRINTF("autostart_start: starting process '%s'\n", processes[i]->name);
-  }
+	for(i = 0; processes[i] != NULL; ++i)
+	{
+		process_start(processes[i], NULL);
+		PRINTF("autostart_start: starting process '%s'\n", processes[i]->name);
+	}
 }
 /*---------------------------------------------------------------------------*/
-void autostart_exit(struct process * const processes[])
+void ICACHE_FLASH_ATTR autostart_exit(struct process * const processes[])
 {
-  int i;
+	int i;
 
-  for(i = 0; processes[i] != NULL; ++i)
-  {
-    process_exit(processes[i]);
-    PRINTF("autostart_exit: stopping process '%s'\n", processes[i]->name);
-  }
+	for(i = 0; processes[i] != NULL; ++i)
+	{
+		process_exit(processes[i]);
+		PRINTF("autostart_exit: stopping process '%s'\n", processes[i]->name);
+	}
 }
 /*---------------------------------------------------------------------------*/

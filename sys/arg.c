@@ -63,6 +63,7 @@
  * buffer, the function does nothing.
  */
 
+#include <ets_sys.h>
 #include "sys/arg.h"
 
 /**
@@ -80,8 +81,7 @@ static struct argbuf bufs[1];
  * \internal Initalizer, called by the dispatcher module.
  */
 /*-----------------------------------------------------------------------------------*/
-void
-arg_init(void)
+void ICACHE_FLASH_ATTR arg_init(void)
 {
   bufs[0].used = 0;
 }
@@ -99,14 +99,15 @@ arg_init(void)
  *
  */
 /*-----------------------------------------------------------------------------------*/
-char *
-arg_alloc(char size)
+char * ICACHE_FLASH_ATTR arg_alloc(char size)
 {
-  if(bufs[0].used == 0) {
-    bufs[0].used = 1;
-    return bufs[0].buf;
-  }
-  return 0;
+	if(bufs[0].used == 0)
+	{
+		bufs[0].used = 1;
+		return bufs[0].buf;
+	}
+
+	return 0;
 }
 /*-----------------------------------------------------------------------------------*/
 /**
@@ -120,12 +121,12 @@ arg_alloc(char size)
  * \param arg A pointer.
  */
 /*-----------------------------------------------------------------------------------*/
-void
-arg_free(char *arg)
+void ICACHE_FLASH_ATTR arg_free(char *arg)
 {
-  if(arg == bufs[0].buf) {
-    bufs[0].used = 0;
-  }
+	if(arg == bufs[0].buf)
+	{
+		bufs[0].used = 0;
+	}
 }
 /*-----------------------------------------------------------------------------------*/
 /** @} */

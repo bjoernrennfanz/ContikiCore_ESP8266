@@ -30,19 +30,20 @@
  *
  */
 
+#include <ets_sys.h>
 #include "contiki-core.h"
+
 #include "sys/procinit.h"
 
 extern const struct process *procinit[];
 
 /*---------------------------------------------------------------------------*/
-void
-procinit_init(void)
+void ICACHE_FLASH_ATTR procinit_init(void)
 {
-  int i;
+	int i;
   
-  for(i = 0; procinit[i] != NULL; ++i) {
-    process_start((struct process *)procinit[i], NULL);
-  }
+	for(i = 0; procinit[i] != NULL; ++i) {
+		process_start((struct process *)procinit[i], NULL);
+	}
 }
 /*---------------------------------------------------------------------------*/

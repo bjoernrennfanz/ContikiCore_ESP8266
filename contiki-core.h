@@ -38,7 +38,7 @@
 // Define type of clock_time_t and how
 // many ticks a second have.
 typedef unsigned long clock_time_t;
-#define CLOCK_SECOND  1024
+#define CLOCK_SECOND  1000
 
 // Set to 1 to enable global debugging
 #define DEBUG 0

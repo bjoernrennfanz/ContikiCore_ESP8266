@@ -11,7 +11,7 @@ CXX := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
 LD  := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
 
 # compiler flags using during compilation of source files
-CFLAGS = -I. -mlongcalls
+CFLAGS = -I. -mlongcalls -DICACHE_FLASH -Os
 
 # library name
 LIB = libcontikicore
@@ -26,6 +26,7 @@ SRC = lib/list.c \
 	  sys/procinit.c \
 	  sys/stimer.c \
 	  sys/timer.c \
+	  contiki-clock-esp8266.c \
 	  contiki-core-esp8266.c
 
 OBJ = $(SRC:.c=.o)

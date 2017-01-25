@@ -36,35 +36,49 @@
 #include <os_type.h>
 #include <osapi.h>
 
-#include "contiki-core.h"
+#include "sys/clock.h"
 
-#define contikiCore_procTaskPrio		2
-#define contikiCore_procTaskQueueLen    1
+os_timer_t osInternalClockTimer;
+clock_time_t internalClockTicks;
 
-os_event_t contikiCore_procTaskQueue[contikiCore_procTaskQueueLen];
-
-static void ICACHE_FLASH_ATTR contikiCore_procTask(os_event_t *events)
+void ICACHE_FLASH_ATTR internalClockCallback(void *pArgs)
 {
-	/* Handle polls and events of ContikiCore */
-	process_run();
-
-	/* Schedule ContikiCore worker task again */
-	system_os_post(contikiCore_procTaskPrio, 0, 0);
+	// Increment clock ticks
+	internalClockTicks++;
 }
 
-void ICACHE_FLASH_ATTR user_init()
+void ICACHE_FLASH_ATTR clock_init(void)
 {
-	/* Initialize clock system */
-	clock_init();
+	// Setup and enable internal clock timer callback
+	os_timer_setfn(&osInternalClockTimer , internalClockCallback, NULL);
+	os_timer_arm(&osInternalClockTimer, (uint32_t)(1000 / CLOCK_SECOND), true);
+}
 
-	/* Initialize process subsystem */
-	process_init();
+clock_time_t ICACHE_FLASH_ATTR clock_time(void)
+{
+	// Return internal clock ticks
+	return internalClockTicks;
+}
 
-	/* Event timers must be started before ctimer_init */
-	process_start(&etimer_process, NULL);
-	ctimer_init();
+unsigned long ICACHE_FLASH_ATTR clock_seconds(void)
+{
+	return internalClockTicks / CLOCK_SECOND;
+}
 
-	/* Create and schedule ContikiCore worker task */
-	system_os_task(contikiCore_procTask, contikiCore_procTaskPrio, contikiCore_procTaskQueue, contikiCore_procTaskQueueLen);
-	system_os_post(contikiCore_procTaskPrio, 0, 0);
+void ICACHE_FLASH_ATTR clock_set_seconds(unsigned long sec)
+{
+	// Convert seconds to internal clock ticks
+	internalClockTicks = (clock_time_t)sec * CLOCK_SECOND;
+}
+
+void ICACHE_FLASH_ATTR clock_wait(clock_time_t t)
+{
+	clock_time_t start;
+	start = clock_time();
+
+	while((clock_time() - start) < (clock_time_t)t);
+}
+
+void ICACHE_FLASH_ATTR clock_delay_usec(uint16_t dt)
+{
 }
