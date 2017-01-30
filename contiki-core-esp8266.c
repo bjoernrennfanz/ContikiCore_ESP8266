@@ -64,6 +64,9 @@ void ICACHE_FLASH_ATTR user_init()
 	process_start(&etimer_process, NULL);
 	ctimer_init();
 
+	/* Start auto start processes */
+	autostart_start(autostart_processes);
+
 	/* Create and schedule ContikiCore worker task */
 	system_os_task(contikiCore_procTask, contikiCore_procTaskPrio, contikiCore_procTaskQueue, contikiCore_procTaskQueueLen);
 	system_os_post(contikiCore_procTaskPrio, 0, 0);
